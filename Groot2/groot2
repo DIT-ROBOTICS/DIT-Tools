@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Open Xhost
+xhost +local:
+
+# Environment variables
+export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:=100}
+export GROOT_APPIMAGE=/home/ros/app/groot2/groot.AppImage
+
+# Initialize docker environment
+cd ./docker
+docker compose up
+
+# Clean up docker after exit
+docker compose down

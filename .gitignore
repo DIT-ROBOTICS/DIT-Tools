@@ -1,0 +1,14 @@
+# Ignore the vscode directory
+.vscode/*
+**/.vscode/*
+
+# Ignore the build directory
+**/build/
+**/install/
+**/log/
+
+# Ignore python cache files
+**/__pycache__/
+
+# Other pecific files or directories
+*.AppImage
