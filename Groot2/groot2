@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Get the directory of the script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd $DIR
+
 # Open Xhost
 xhost +local:
 
@@ -13,3 +17,6 @@ docker compose up
 
 # Clean up docker after exit
 docker compose down
+
+# Clean up Xhost
+xhost -local:

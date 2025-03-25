@@ -50,7 +50,11 @@ RUN apt-get update && apt-get install -y \
     libfuse2 \
     fuse3 \
     ros-humble-behaviortree-cpp \
-    ros-humble-generate-parameter-library
+    ros-humble-generate-parameter-library \
+    # Samba
+    cifs-utils \
+    # Ping
+    iputils-ping
 
 RUN apt-get update && apt-get dist-upgrade -y \
     && apt-get autoremove -y \
