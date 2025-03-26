@@ -40,9 +40,10 @@ for i in "${HOSTS[@]}"; do
 
     if ping -c 1 -W 1 $HOST_IP &> /dev/null; then
         echo -e "\e[1;32m$HOST_IP is online. Mounting...\e[0m"
-        sudo mkdir -p "$MOUNT_POINT"
+        mkdir -p "$MOUNT_POINT"
         sudo mount -t cifs "$SHARE" "$MOUNT_POINT" \
-            -o username=$SMB_USER,password=$SMB_PASS,vers=3.0
+                   -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g)
+        sudo chown -R ros:ros /home/ros/app/groot2/DIT
     else
         echo -e "\e[1;31m$HOST_IP is offline. Skipping...\e[0m"
     fi
