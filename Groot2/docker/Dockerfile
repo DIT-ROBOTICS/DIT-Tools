@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
+    tini \
     bash-completion \
     # DDS
     ros-humble-rmw-cyclonedds-cpp \
