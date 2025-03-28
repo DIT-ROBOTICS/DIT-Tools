@@ -1,6 +1,5 @@
 # Ignore the vscode directory
-.vscode/*
-**/.vscode/*
+**/.vscode/
 
 # Ignore the build directory
 **/build/
@@ -13,3 +12,4 @@
 # Other pecific files or directories
 *.AppImage
 *.btproj
+**/Backups/

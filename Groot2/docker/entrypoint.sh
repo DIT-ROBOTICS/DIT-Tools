@@ -39,6 +39,10 @@ echo "├───────────────┬───────�
 printf "│ %-13s │ %-12s │\n" "Host" "Status"
 echo "├───────────────┼──────────────┤"
 
+# Create backup directory
+BACKUP_DIR="$MOUNT_BASE/Backups"
+mkdir -p "$BACKUP_DIR"
+
 # Loop through each host and mount if reachable
 for i in "${HOSTS[@]}"; do
     HOST_IP="${HOST_IP_PREFIX}.$i"
@@ -52,6 +56,11 @@ for i in "${HOSTS[@]}"; do
         sudo mount -t cifs "$SHARE" "$MOUNT_POINT" \
             -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g)
         sudo chown -R ros:ros "$MOUNT_BASE"
+
+        # Backup the mounted folder (overwrite the latest version)
+        BACKUP_TARGET="$BACKUP_DIR/DIT-2025-$i"
+        rm -rf "$BACKUP_TARGET"
+        cp -r "$MOUNT_POINT" "$BACKUP_TARGET"
     else
         STATUS_TEXT="Disconnected"
         STATUS_COLOR="\033[0;31m"  # Red
