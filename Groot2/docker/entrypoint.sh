@@ -31,23 +31,38 @@ MOUNT_BASE="$HOME/app/groot2/DIT"
 # Get the first 9 digits of the IP from the host network
 HOST_IP_PREFIX=$(hostname -I | awk '{print $1}' | cut -d. -f1-3)
 
+# Print styled table header
+echo ""
+echo "┌──────────────────────────────┐"
+echo "│      DIT-2025 Connection     │"
+echo "├───────────────┬──────────────┤"
+printf "│ %-13s │ %-12s │\n" "Host" "Status"
+echo "├───────────────┼──────────────┤"
+
+# Loop through each host and mount if reachable
 for i in "${HOSTS[@]}"; do
     HOST_IP="${HOST_IP_PREFIX}.$i"
     SHARE="//${HOST_IP}/dit"
     MOUNT_POINT="$MOUNT_BASE/DIT-2025-$i"
 
-    echo -e "\e[1;34mChecking if $HOST_IP is online...\e[0m"
-
     if ping -c 1 -W 1 $HOST_IP &> /dev/null; then
-        echo -e "\e[1;32m$HOST_IP is online. Mounting...\e[0m"
+        STATUS_TEXT="Connected"
+        STATUS_COLOR="\033[0;32m"  # Green
         mkdir -p "$MOUNT_POINT"
         sudo mount -t cifs "$SHARE" "$MOUNT_POINT" \
-                   -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g)
-        sudo chown -R ros:ros /home/ros/app/groot2/DIT
+            -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g)
+        sudo chown -R ros:ros "$MOUNT_BASE"
     else
-        echo -e "\e[1;31m$HOST_IP is offline. Skipping...\e[0m"
+        STATUS_TEXT="Disconnected"
+        STATUS_COLOR="\033[0;31m"  # Red
     fi
+
+    # Print the status in the table
+    printf "│ %-13s │ " "DIT-2025-$i"
+    echo -e "${STATUS_COLOR}$(printf '%-12s' "$STATUS_TEXT")\033[0m │"
 done
+
+echo "└───────────────┴──────────────┘"
 
 
 # ==============================
@@ -78,10 +93,12 @@ fi
 sudo chmod +x $GROOT_DIR/$GROOT_APPIMAGE
 
 # Run the Groot AppImage
-$GROOT_DIR/$GROOT_APPIMAGE &
+$GROOT_DIR/$GROOT_APPIMAGE
 
-while true; do
-    sleep 60
-done
+# # Wait for the AppImage to start
+# sleep 5
+# while pgrep -f "AppRun.wrapped" > /dev/null; do
+#     sleep 1
+# done
 
-exec "$@"
+# exec "$@"
