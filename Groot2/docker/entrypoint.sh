@@ -53,14 +53,18 @@ for i in "${HOSTS[@]}"; do
         STATUS_TEXT="Connected"
         STATUS_COLOR="\033[0;32m"  # Green
         mkdir -p "$MOUNT_POINT"
-        sudo mount -t cifs "$SHARE" "$MOUNT_POINT" \
-            -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g)
-        sudo chown -R ros:ros "$MOUNT_BASE"
+        if sudo mount -t cifs "$SHARE" "$MOUNT_POINT" \
+                      -o username=$SMB_USER,password=$SMB_PASS,vers=3.0,uid=$(id -u),gid=$(id -g) 2>/dev/null; then
+            sudo chown -R ros:ros "$MOUNT_BASE"
 
-        # Backup the mounted folder (overwrite the latest version)
-        BACKUP_TARGET="$BACKUP_DIR/DIT-2025-$i"
-        rm -rf "$BACKUP_TARGET"
-        cp -r "$MOUNT_POINT" "$BACKUP_TARGET"
+            # Backup the mounted folder (overwrite the latest version)
+            BACKUP_TARGET="$BACKUP_DIR/DIT-2025-$i"
+            rm -rf "$BACKUP_TARGET"
+            cp -r "$MOUNT_POINT" "$BACKUP_TARGET"
+        else
+            STATUS_TEXT="Mount Fail"
+            STATUS_COLOR="\033[0;33m"  # Yellow
+        fi
     else
         STATUS_TEXT="Disconnected"
         STATUS_COLOR="\033[0;31m"  # Red
