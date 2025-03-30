@@ -7,7 +7,7 @@ services:
       args:
         ROS_DISTRO: ${ROS_DISTRO}
         USERNAME: ros
-    image: scx/groot2:${ROS_DISTRO}
+    image: seanchangx/groot2:${ROS_DISTRO}
     container_name: groot2
     stdin_open: true
     tty: true
