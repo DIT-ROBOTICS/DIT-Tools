@@ -48,7 +48,7 @@ groot() {
         echo "Groot AppImage not found: $GROOT_APPIMAGE"
     fi
     # Add alias for groot
-    alias groot='$GROOT_APPIMAGE'
+    alias groot2='$GROOT_APPIMAGE'
 }
 
 # ==================== END ==================== #

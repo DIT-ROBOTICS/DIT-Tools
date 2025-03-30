@@ -4,7 +4,7 @@
 ######################################################################
 
 ARG ROS_DISTRO=humble
-FROM osrf/ros:${ROS_DISTRO}-desktop AS base
+FROM ros:${ROS_DISTRO}-ros-base AS base
 
 LABEL org.opencontainers.image.title="Groot Docker Image"
 LABEL org.opencontainers.image.authors="scx@gapp.nthu.edu.tw"
@@ -25,7 +25,7 @@ FROM base AS user-setup
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && apt-get update \
-    && apt-get install -y sudo \
+    && apt-get install -y --no-install-recommends sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME \
     && rm -rf /var/lib/apt/lists/*
@@ -37,30 +37,34 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 FROM user-setup AS tools
 
-RUN apt-get update && apt-get install -y \
-    tree \
-    vim \
-    git \
-    wget \
-    curl \
-    tini \
-    bash-completion \
-    # DDS
-    ros-humble-rmw-cyclonedds-cpp \
-    # Groot
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Development tools
+    vim git wget curl bash-completion tree tini \
+    # AppImage needed graphic/system libraries
+    libdbus-1-3 \
     libfuse2 \
     fuse3 \
+    libgl1 \
+    libgtk-3-0 \
+    libopengl0 \
+    libx11-6 \
+    libxcb1 \
+    libxcursor1 \
+    libxext6 \
+    libxi6 \
+    libxinerama1 \
+    libxrandr2 \
+    mesa-utils \
+    x11-utils \
+    # ROS 2 libraries
+    ros-humble-rmw-cyclonedds-cpp \
     ros-humble-behaviortree-cpp \
     ros-humble-generate-parameter-library \
     # Samba
     cifs-utils \
     # Ping
-    iputils-ping
-
-RUN apt-get update && apt-get dist-upgrade -y \
-    && apt-get autoremove -y \
-    && apt-get autoclean -y \
-    && apt-get clean -y \
+    iputils-ping \
+    && apt-get autoremove -y && apt-get autoclean -y && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
 ######################################################################
@@ -79,10 +83,6 @@ WORKDIR /app
 
 # Set up bashrc
 COPY .bashrc /home/$USERNAME/.bashrc.conf
-RUN cat /home/$USERNAME/.bashrc.conf >> /home/$USERNAME/.bashrc
-
-# Set up python environment
-# RUN pip install --upgrade pip
-# RUN pip install --no-cache-dir
+RUN cat /home/$USERNAME/.bashrc.conf >> /home/$USERNAME/.bashrc && rm /home/$USERNAME/.bashrc.conf
 
 CMD ["/bin/bash"]
