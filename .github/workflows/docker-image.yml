@@ -30,12 +30,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: Build Docker Image
-        use:s: docker/build-push-action@v6
+        uses: docker/build-push-action@v6
         with:
           context: ./Groot2/docker
           load: true
           push: false
-          tags: ${{ sets.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: Push Docker Image
         uses: docker/build-push-action@v6
