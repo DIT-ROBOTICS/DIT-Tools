@@ -1,0 +1,64 @@
+{
+    "BehaviorTreeNodeStyle": {
+        "CommentColor": "#ff808080",
+        "FailureColor": "#ffff003c",
+        "LockedBackground": "#ff2e2e2e",
+        "RunningColor": "#ffffa500",
+        "SuccessColor": "#ff00ff00"
+    },
+    "ConnectionStyle": {
+        "ConstructionColor": "gray",
+        "ConstructionLineWidth": 2,
+        "HoveredColor": "#ffff4d6d",
+        "LineWidth": 3,
+        "NormalColor": "#ff8b0000",
+        "PointDiameter": 10,
+        "SelectedColor": "#ffff003c",
+        "SelectedHaloColor": "transparent",
+        "UseDataDefinedColors": false
+    },
+    "EmbeddedWidgetStyle": {
+        "conditions_background": "#ff1a1a1a",
+        "conditions_text": "#ffff003c",
+        "control_type": "#ffff005f",
+        "decorator_type": "#ffff003c",
+        "expand_background": "#dddddd",
+        "expand_text": "black",
+        "general_type": "#ffffffff",
+        "port_line_background": "#dddddd",
+        "port_line_blackboard_text": "#000077",
+        "port_line_border": "#dddddd",
+        "port_line_highlight": "#ffff003c",
+        "port_line_invalid_text": "#bb2222",
+        "port_line_text": "black",
+        "text_bg_color": "transparent",
+        "text_color": "#ffffffff",
+        "text_faded": "#ffe8e8e8"
+    },
+    "GraphicsViewStyle": {
+        "BackgroundColor": "#ff0d0d0d",
+        "CoarseGridColor": "#ff0d0d0d",
+        "FineGridColor": "#ff0d0d0d"
+    },
+    "NodeStyle": {
+        "ConnectionPointColor": "#ff8b0000",
+        "ConnectionPointDiameter": 8,
+        "DashedBoundaryColor": "transparent",
+        "ErrorColor": "red",
+        "FilledConnectionPointColor": "#ff8b0000",
+        "FontColor": "white",
+        "FontColorFaded": "#dddddd",
+        "GradientColor0": "#ff1a1a1a",
+        "GradientColor1": "#ff1a1a1a",
+        "GradientColor2": "#ff111117",
+        "GradientColor3": "#ff111117",
+        "HoveredPenWidth": 1.5,
+        "NormalBoundaryColor": "#ffcccccc",
+        "Opacity": 1,
+        "PenWidth": 1,
+        "SelectedBoundaryColor": "#ffff003c",
+        "ShadowColor": "transparent",
+        "WarningColor": "#ffff003c"
+    },
+    "theme": "dark"
+}

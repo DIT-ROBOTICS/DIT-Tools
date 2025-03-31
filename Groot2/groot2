@@ -4,18 +4,84 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $DIR
 
-# Open Xhost
-xhost +local:
+# Allow local connections to the X server (suppress output)
+xhost +local: &> /dev/null
 
-# Environment variables
+# Set default ROS domain ID if not already set
 export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:=100}
 
-# Initialize docker environment
+# Define theme-related paths
+THEME_DIR="$DIR/app/groot2/Themes"
+THEME_PATH="$THEME_DIR/Groot2.ini"
+DEFAULT_THEME="$THEME_DIR/Groot2_default.ini"
+
+# Ensure Groot2.ini exists
+if [ ! -f "$THEME_PATH" ]; then
+    touch "$THEME_PATH"
+fi
+
+# Handle script arguments
+if [ -z "$1" ]; then
+    # No argument provided, do nothing
+    :
+elif [ "$1" == "config" ]; then
+    # Configuration mode
+    echo -e "\e[1;34mConfiguring Groot\e[0m"
+
+    # Display available themes with numbering
+    echo -e "\n\e[1;32m───────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;32mAvailable themes\e[0m"
+    THEMES=($(ls "$THEME_DIR" | grep -E "\.ini$" | grep -v "^Groot2\.ini$"))
+    for ((i = 0; i < ${#THEMES[@]}; i++)); do
+        echo -e "\e[1;32m[$((i + 1))]\e[0m ${THEMES[$i]}"
+    done
+    echo -e "\e[1;32m───────────────────────────────────────────────\e[0m"
+
+    # Prompt user to select a theme by number
+    read -p $'\e[1;36mSelect a theme by number:\e[0m ' SELECTED_INDEX
+    if [ -n "$SELECTED_INDEX" ] && [[ "$SELECTED_INDEX" =~ ^[0-9]+$ ]] && [ "$SELECTED_INDEX" -ge 1 ] && [ "$SELECTED_INDEX" -le "${#THEMES[@]}" ]; then
+        SELECTED_THEME="${THEMES[$((SELECTED_INDEX - 1))]}"
+        if [ -f "$THEME_PATH" ]; then
+            echo -e "\e[1;33m───────────────────────────────────────────────\e[0m"
+            echo -e "\e[1;33mApplying theme: $SELECTED_THEME\e[0m"
+            echo -e "\e[1;33m───────────────────────────────────────────────\e[0m"
+            cp "$THEME_DIR/$SELECTED_THEME" "$THEME_PATH"
+        else
+            echo -e "\e[1;31m───────────────────────────────────────────────\e[0m"
+            echo -e "\e[1;31mTheme not found: $SELECTED_THEME. \e[0m"
+            echo -e "\e[1;31mUsing default theme.\e[0m"
+            echo -e "\e[1;31m───────────────────────────────────────────────\e[0m"
+            cp "$DEFAULT_THEME" "$THEME_PATH"
+        fi
+    else
+        echo -e "\e[1;33m───────────────────────────────────────────────\e[0m"
+        echo -e "\e[1;33mNo valid selection. Using default theme.\e[0m"
+        echo -e "\e[1;33m───────────────────────────────────────────────\e[0m"
+        cp "$DEFAULT_THEME" "$THEME_PATH"
+    fi
+elif [ "$1" == "help" ]; then
+    # Help mode
+    echo -e "\n\e[1;34m───────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;34mUsage: $0 [option]\e[0m"
+    echo -e "\e[1;34m───────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;32mOptions:\e[0m"
+    echo "  config   Configure Groot theme"
+    echo "  help     Display this help message"
+    exit 0
+else
+    # Unrecognized argument
+    echo -e "\e[1;31m───────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;31mUnrecognized argument: $1.\e[0m" 
+    echo -e "\e[1;31mUse 'help' for usage information.\e[0m"
+    echo -e "\e[1;31m───────────────────────────────────────────────\e[0m"
+fi
+
+# Initialize Docker environment
 cd ./docker
 docker compose up
 
-# Clean up docker after exit
+# Clean up Docker environment after exit
 docker compose down
 
-# Clean up Xhost
-xhost -local:
+# Revoke local connections to the X server (suppress output)
+xhost -local: &> /dev/null

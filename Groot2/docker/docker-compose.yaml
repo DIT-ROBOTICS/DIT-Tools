@@ -29,6 +29,7 @@ services:
       - ./entrypoint.sh:/entrypoint.sh
       # Mount app resources into container.
       - ../app:/home/ros/app
+      - ../app/groot2/Themes/Groot2.ini:/home/ros/.config/AurynRobotics/Groot2.ini
 
       # Mount local timezone into container.
       - /etc/timezone:/etc/timezone:ro

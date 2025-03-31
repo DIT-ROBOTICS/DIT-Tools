@@ -42,3 +42,8 @@ groot2
 This will automatically handle the following:
 - Mounting all robot Groot workspaces in the current network environment using the Samba service provided by [DIT-Scripts](https://github.com/DIT-ROBOTICS/DIT-Scripts).
 - Backing up the latest mounted directories for future reference.
+
+Additionally, you can use the following options with the `groot2` command:
+
+- **`groot2 config`**: Opens a configuration mode where you can select and apply a theme for Groot2.
+- **`groot2 help`**: Displays a help message with usage information for the `groot2` script.
